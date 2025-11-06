@@ -62,8 +62,15 @@ app.get('/tournaments', (req, res) => {
 });
 
 // matchTeams page route
-app.get('/matchTeams', (req, res) => {
-    res.render('matchTeams', { title: 'matchTeams Page' });
+app.get('/matchTeams', async (req, res) => {
+    try{
+        const [rows, fields] = await db.query('SELECT * FROM matchTeams');
+        res.render('matchTeams', { title: 'Matches Page', matchTeams: rows});
+    } catch (err){
+        console.error(err);
+        res.status(500).send('Database error');
+    }
+    
 });
 
 // tournamentMatches page route
