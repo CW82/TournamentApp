@@ -1,21 +1,39 @@
-nav ul {
+.navagation-container nav ul {
   list-style-type: none;
+  font-weight: bold;
   padding: 0;
   margin: 0;
   display: flex;
   gap: 1em;
 }
 
-nav a {
+.navagation-container nav a {
   text-decoration: none;
-  color: #006699;
+  color: #78866B;
 }
 
-nav a:hover {
+.navagation-container nav a:hover {
   text-decoration: underline;
 }
 
+.header-container {
+    display: flex;          /* Arrange children in a row */
+    align-items: center;    /* Vertically center them */
+    gap: 10px;              /* Space between h1 and h2 */
+}
+
+.header-container h1 {
+  font-size: 75px;
+  color: #687169;
+}
+
+.header-container h2 {
+  font-size: 24px;
+  color: #828E84;
+}
+
 body {
+    background-color: #dddddd; 
     font-family: Arial, sans-serif;
     margin: 20px;
 }
