@@ -5,7 +5,7 @@
 // Express
 const express = require('express');  // Import express
 const app = express();               // Instantiate express
-const PORT = 8158;                   // Choose a port number
+const PORT = 8161;                   // Choose a port number
 
 // Database
 const db = require('./dbconnector'); // Note: matches file name (db-connector.js)
@@ -47,6 +47,15 @@ app.get('/tournaments', (req, res) => {
     res.render('tournaments', { title: 'Tournaments Page' });
 });
 
+// matchTeams page route
+app.get('/matchTeams', (req, res) => {
+    res.render('matchTeams', { title: 'matchTeams Page' });
+});
+
+// tournamentMatches page route
+app.get('/tournamentMatches', (req, res) => {
+    res.render('tournamentMatches', { title: 'tournamentMatches Page' });
+});
 
 /*
     LISTENER
