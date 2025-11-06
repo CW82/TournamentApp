@@ -5,12 +5,17 @@
 // Express
 const express = require('express');  // Import express
 const app = express();               // Instantiate express
-const PORT = 9035;                   // Choose a port number
+const PORT = 8158;                   // Choose a port number
 
 // Database
 const db = require('./dbconnector'); // Note: matches file name (db-connector.js)
 
 // View Engine Setup (Handlebars)
+const exphbs = require('express-handlebars');
+app.engine('hbs', exphbs.engine({
+    defaultLayout: 'main', // This tells it to use main.hbs by default
+    layoutsDir: 'views/layouts/' // The folder where your layouts are located
+}))
 app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
 
@@ -38,18 +43,6 @@ app.get('/matches', (req, res) => {
 });
 
 // Tournaments page route
-app.get('/tournaments', (req, res) => {
-    res.render('tournaments', { title: 'Tournaments Page' });
-});
-
-app.get('/teams', (req, res) => {
-    res.render('teams', { title: 'Teams Page' });
-});
-
-app.get('/matches', (req, res) => {
-    res.render('matches', { title: 'Matches Page' });
-});
-
 app.get('/tournaments', (req, res) => {
     res.render('tournaments', { title: 'Tournaments Page' });
 });
