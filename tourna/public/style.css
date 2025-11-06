@@ -1,3 +1,20 @@
+nav ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 1em;
+}
+
+nav a {
+  text-decoration: none;
+  color: #006699;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 20px;

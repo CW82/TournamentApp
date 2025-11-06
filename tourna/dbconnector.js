@@ -5,10 +5,17 @@ let mysql = require('mysql2')
 const pool = mysql.createPool({
     waitForConnections: true,
     connectionLimit   : 10,
+<<<<<<< Updated upstream
     host              : 'classmysql.engr.oregonstate.edu',
     user              : 'cs340_wolfcr',
     password          : '*********',
     database          : 'cs340_wolfcr'
+=======
+    host              : ,
+    user              : ,
+    password          : ,
+    database          : 
+>>>>>>> Stashed changes
 }).promise(); // This makes it so we can use async / await rather than callbacks
 
 // Export it for use in our application
