@@ -1,5 +1,26 @@
-<div class="tournament">
-    <h1 style="color: green;">Tournament Bracket</h1>
-    <p>Welcome to the 2025 Spring Tournament!</p>
-</div>
+<table border="1">
+    <thead>
+        <tr>
+            <th>tournamentID</th>
+            <th>tournamentName</th>
+            <th>gameID</th>
+            <th>prizeMoney</th>
+            <th>location</th>
+            <th>startDate</th>
+            <th>endDate</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each tournaments}}
+        <tr>
+            <td>{{tournamentID}}</td>
+            <td>{{tournamentName}}</td>
+            <td>{{gameID}}</td>
+            <td>{{prizeMoney}}</td>
+            <td>{{location}}</td>
+            <td>{{startDate}}</td>
+            <td>{{endDate}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
 
