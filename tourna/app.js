@@ -14,7 +14,17 @@ const db = require('./dbconnector'); // Note: matches file name (db-connector.js
 const exphbs = require('express-handlebars');
 app.engine('hbs', exphbs.engine({
     defaultLayout: 'main', // This tells it to use main.hbs by default
-    layoutsDir: 'views/layouts/' // The folder where your layouts are located
+    layoutsDir: 'views/layouts/', // The folder where your layouts are located
+    helpers: {
+        formatDate: (date) => {
+            // Format as Month Day, Year (e.g., November 6, 2025)
+            return new Date(date).toLocaleDateString('en-US', {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric'
+            });
+        }
+    }
 }))
 app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
