@@ -43,6 +43,7 @@ table {
     width: 100%;               
     font-family: Arial, sans-serif;
     margin-bottom: 2rem;
+    width: 50%;                 
 }
 thead th {
     background-color: #78866B;
@@ -99,9 +100,30 @@ a:hover {
 	color: blueviolet;
 }
 
-table {
-    border-collapse: collapse; /* merge borders */
-    width: 50%;               /* full width */
-    font-family: Arial, sans-serif;
-    margin-bottom: 2rem;       /* space after table */
+.delete-button button {
+    background-color: #687169;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.delete-button button:hover {
+    background-color: #c0392b;
+}
+
+button {
+    background-color: #78866B;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+button:hover {
+    background-color: #555f4b;
 }
