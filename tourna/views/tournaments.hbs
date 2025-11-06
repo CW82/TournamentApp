@@ -8,9 +8,9 @@
             <th>location</th>
             <th>startDate</th>
             <th>endDate</th>
+            <th>Actions</th>
         </tr>
     </thead>
-    
     <tbody>
         {{#each tournaments}}
         <tr>
@@ -21,6 +21,10 @@
             <td>{{location}}</td>
             <td>{{formatDate startDate}}</td>
             <td>{{formatDate endDate}}</td>
+            <td>
+                <button type="button">Delete</button>
+                <button type="button">Add</button>
+            </td>  
         </tr>
         {{/each}}
     </tbody>
