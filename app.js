@@ -42,18 +42,6 @@ app.get('/tournaments', (req, res) => {
     res.render('tournaments', { title: 'Tournaments Page' });
 });
 
-app.get('/teams', (req, res) => {
-    res.render('teams', { title: 'Teams Page' });
-});
-
-app.get('/matches', (req, res) => {
-    res.render('matches', { title: 'Matches Page' });
-});
-
-app.get('/tournaments', (req, res) => {
-    res.render('tournaments', { title: 'Tournaments Page' });
-});
-
 
 /*
     LISTENER
