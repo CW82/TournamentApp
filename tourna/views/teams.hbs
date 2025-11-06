@@ -1,0 +1,20 @@
+<table border="1">
+    <thead>
+        <tr>
+            <th>teamID</th>
+            <th>teamName</th>
+            <th>region</th>
+            <th>playerCount</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each teams}}
+        <tr>
+            <td>{{teamID}}</td>
+            <td>{{teamName}}</td>
+            <td>{{region}}</td>
+            <td>{{playerCount}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
