@@ -33,18 +33,25 @@ app.get('/', (req, res) => {
 });
 
 // Teams page route
-app.get('/teams', (req, res) => {
-    res.render('teams', { title: 'Teams Page' });
+app.get('/teams', async (req, res) => {
+    try{
+        const [rows, fields] = await db.query('SELECT * FROM Teams');
+        res.render('Teams', { title: 'Teams Page', teams: rows});
+    } catch (err){
+        console.error(err);
+        res.status(500).send('Database error');
+    }
+    
 });
 
 // Matches page route
 app.get('/matches', (req, res) => {
-    res.render('matches', { title: 'Matches Page' });
+    res.render('Matches', { title: 'Matches Page' });
 });
 
 // Tournaments page route
 app.get('/tournaments', (req, res) => {
-    res.render('tournaments', { title: 'Tournaments Page' });
+    res.render('Tournaments', { title: 'Tournaments Page' });
 });
 
 // matchTeams page route
