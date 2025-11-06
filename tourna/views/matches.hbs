@@ -1,0 +1,20 @@
+<table border="1">
+    <thead>
+        <tr>
+            <th>matchID</th>
+            <th>tournamentID</th>
+            <th>scheduledTime</th>
+            <th>winner</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each matches}}
+        <tr>
+            <td>{{matchID}}</td>
+            <td>{{tournamentID}}</td>
+            <td>{{scheduledTime}}</td>
+            <td>{{winner}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
