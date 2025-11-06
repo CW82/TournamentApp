@@ -5,6 +5,7 @@
             <th>matchID</th>
             <th>team1_teamID</th>
             <th>team2_teamID</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -14,6 +15,10 @@
             <td>{{matchID}}</td>
             <td>{{team1_teamID}}</td>
             <td>{{team2_teamID}}</td>
+            <td>
+                <button type="button">Delete</button>
+                <button type="button">Add</button>
+            </td> 
         </tr>
         {{/each}}
     </tbody>
