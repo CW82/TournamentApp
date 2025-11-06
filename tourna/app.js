@@ -56,11 +56,11 @@ app.get('/matches', async (req, res) => {
     
 });
 
-// Tournaments page route
-app.get('/tournaments', async (req, res) => {
+// Tournaments page route fixed
+app.get('/tournament', async (req, res) => {
     try {
-        const [rows, fields] = await db.query('SELECT * FROM Tournaments');
-        res.render('tournaments', { title: 'Tournaments Page', tournaments: rows});
+        const [rows, fields] = await db.query('SELECT * FROM Tournament');
+        res.render('tournament', { title: 'Tournament Page', tournament: rows});
     } catch (err) {
         console.error(err);
         res.status(500).send('Database error');
