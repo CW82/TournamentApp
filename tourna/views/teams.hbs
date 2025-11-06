@@ -5,6 +5,7 @@
             <th>teamName</th>
             <th>region</th>
             <th>playerCount</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -14,6 +15,10 @@
             <td>{{teamName}}</td>
             <td>{{region}}</td>
             <td>{{playerCount}}</td>
+            <td>
+                <button type="button">Delete</button>
+                <button type="button">Add</button>
+            </td> 
         </tr>
         {{/each}}
     </tbody>

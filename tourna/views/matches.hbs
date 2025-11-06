@@ -5,6 +5,7 @@
             <th>tournamentID</th>
             <th>scheduledTime</th>
             <th>winner</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -14,6 +15,10 @@
             <td>{{tournamentID}}</td>
             <td>{{scheduledTime}}</td>
             <td>{{winner}}</td>
+            <td>
+                <button type="button">Delete</button>
+                <button type="button">Add</button>
+            </td> 
         </tr>
         {{/each}}
     </tbody>
