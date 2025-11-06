@@ -1,0 +1,20 @@
+<table border="1">
+    <thead>
+        <tr>
+            <th>matchTeamsID</th>
+            <th>matchID</th>
+            <th>team1_teamID</th>
+            <th>team2_teamID</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each matchTeams}}
+        <tr>
+            <td>{{matchTeamsID}}</td>
+            <td>{{matchID}}</td>
+            <td>{{team1_teamID}}</td>
+            <td>{{team2_teamID}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
