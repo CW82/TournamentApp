@@ -5,7 +5,7 @@
 // Express
 const express = require('express');  // Import express
 const app = express();               // Instantiate express
-const PORT = 8291;                   // Choose a port number
+const PORT = 8299;                   // Choose a port number
 
 // Database
 const db = require('./dbconnector'); // Note: matches file name (db-connector.js)
@@ -69,7 +69,7 @@ app.get('/matches', async (req, res) => {
 // Tournaments page route
 app.get('/tournaments', async (req, res) => {
     try {
-        const [rows, fields] = await db.query('SELECT * FROM Tournament');
+        const [rows, fields] = await db.query('SELECT * FROM Tournaments');
         res.render('tournaments', { title: 'Tournament Page', tournaments: rows});
     } catch (err) {
         console.error(err);
