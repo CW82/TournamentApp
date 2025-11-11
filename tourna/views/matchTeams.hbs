@@ -17,7 +17,9 @@
             <td>{{team2_teamID}}</td>
             <td>
                 <div class="delete-button">
-                <button type="button">Delete</button>
+                <form action="/matchTeams/delete/{{matchTeamsID}}" method="POST" class="delete-button" onsubmit="return confirmDelete('{{matchTeamsID}}')">
+                    <button type="submit">Delete</button>
+                </form>
                 </div>
             </td> 
         </tr>
@@ -25,6 +27,18 @@
     </tbody>
 </table>
 
-    <body>
-        <button type="button">Add New</button>
-    </body>
+<form action="/matchTeams/add" method="POST" class="add-form">
+    <h3>Add New Team</h3>
+    <div class="form-row">
+        <input type="number" name="matchID" placeholder="matchID" required>
+        <input type="number" name="team1_teamID" placeholder="team1_teamID" required>
+        <input type="number" name="team2_teamID" placeholder="team2_teamID" required>
+        <button type="submit">Add Team</button>
+    </div>
+</form>
+
+<script>
+function confirmDelete(matchTeamsID) {
+    return confirm(`Are you sure you want to delete "${matchTeamsID}"?`);
+}
+</script>

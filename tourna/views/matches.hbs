@@ -17,7 +17,9 @@
             <td>{{winner}}</td>
             <td>
                 <div class="delete-button">
-                <button type="button">Delete</button>
+                <form action="/matches/delete/{{matchID}}" method="POST" class="delete-button" onsubmit="return confirmDelete('{{matchID}}')">
+                    <button type="submit">Delete</button>
+                </form>
                 </div>
             </td> 
         </tr>
@@ -25,6 +27,18 @@
     </tbody>
 </table>
 
-    <body>
-        <button type="button">Add New</button>
-    </body>
+<form action="/matches/add" method="POST" class="add-form">
+    <h3>Add New Team</h3>
+    <div class="form-row">
+        <input type="number" name="tournamentID" placeholder="tournamentID" required>
+        <input type="datetime-local" name="scheduledTime" placeholder="scheduledTime" required>
+        <input type="number" name="winner" placeholder="winner" required>
+        <button type="submit">Add Match</button>
+    </div>
+</form>
+
+<script>
+function confirmDelete(matchID) {
+    return confirm(`Are you sure you want to delete "${matchID}"?`);
+}
+</script>

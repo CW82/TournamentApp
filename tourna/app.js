@@ -99,14 +99,74 @@ app.get('/matches', async (req, res) => {
     
 });
 
+// Matches add route
+app.post('/matches/add', async (req, res) => {
+    const { tournamentID, scheduledTime, winner } = req.body;
+    try {
+        await db.query(
+            'INSERT INTO Matches (tournamentID, scheduledTime, winner) VALUES (?, ?, ?)',
+            [tournamentID, scheduledTime, winner]
+        );
+        res.redirect('/matches');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Database insert error');
+    }
+});
+
+// Matches delete route
+app.post('/matches/delete/:matchID', async (req, res) => {
+    const matchID = req.params.matchID;
+    try {
+        // Delete the team — cascading deletes handle other tables automatically
+        await db.query('DELETE FROM Matches WHERE matchID = ?', [matchID]);
+
+        // Redirect back to teams page
+        res.redirect('/matches');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Database error while deleting match.');
+    }
+});
+
 // Tournaments page route
 app.get('/tournaments', async (req, res) => {
     try {
         const [rows, fields] = await db.query('SELECT * FROM Tournaments');
-        res.render('tournaments', { title: 'Tournament Page', tournaments: rows});
+        res.render('tournaments', { title: 'Tournaments Page', tournaments: rows});
     } catch (err) {
         console.error(err);
         res.status(500).send('Database error');
+    }
+});
+
+// Tournaments add route
+app.post('/tournaments/add', async (req, res) => {
+    const { tournamentName, gameID, prizeMoney, location, startDate, endDate } = req.body;
+    try {
+        await db.query(
+            'INSERT INTO Tournaments (tournamentName, gameID, prizeMoney, location, startDate, endDate) VALUES (?, ?, ?, ?, ?, ?)',
+            [tournamentName, gameID, prizeMoney, location, startDate, endDate]
+        );
+        res.redirect('/tournaments');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Database insert error');
+    }
+});
+
+// Tournaments delete route
+app.post('/tournaments/delete/:tournamentID', async (req, res) => {
+    const tournamentID = req.params.tournamentID;
+    try {
+        // Delete the team — cascading deletes handle other tables automatically
+        await db.query('DELETE FROM Tournaments WHERE tournamentID = ?', [tournamentID]);
+
+        // Redirect back to teams page
+        res.redirect('/tournaments');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Database error while deleting tournament.');
     }
 });
 
@@ -114,7 +174,7 @@ app.get('/tournaments', async (req, res) => {
 app.get('/matchTeams', async (req, res) => {
     try{
         const [rows, fields] = await db.query('SELECT * FROM matchTeams');
-        res.render('matchTeams', { title: 'Matches Page', matchTeams: rows});
+        res.render('matchTeams', { title: 'matchTeams Page', matchTeams: rows});
     } catch (err){
         console.error(err);
         res.status(500).send('Database error');
@@ -122,16 +182,76 @@ app.get('/matchTeams', async (req, res) => {
     
 });
 
+// matchTeams add route
+app.post('/matchTeams/add', async (req, res) => {
+    const { matchID, team1_teamID, team2_teamID } = req.body;
+    try {
+        await db.query(
+            'INSERT INTO matchTeams (matchID, team1_teamID, team2_teamID) VALUES (?, ?, ?)',
+            [matchID, team1_teamID, team2_teamID]
+        );
+        res.redirect('/matchTeams');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Database insert error');
+    }
+});
+
+// matchTeams delete route
+app.post('/matchTeams/delete/:matchTeamsID', async (req, res) => {
+    const matchTeamsID = req.params.matchTeamsID;
+    try {
+        // Delete the team — cascading deletes handle other tables automatically
+        await db.query('DELETE FROM matchTeams WHERE matchTeamsID = ?', [matchTeamsID]);
+
+        // Redirect back to teams page
+        res.redirect('/matchTeams');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Database error while deleting matchTeam.');
+    }
+});
+
 // tournamentMatches page route
 app.get('/tournamentMatches', async (req, res) => {
     try{
         const [rows, fields] = await db.query('SELECT * FROM tournamentMatches');
-        res.render('tournamentMatches', { title: 'Matches Page', tournamentMatches: rows});
+        res.render('tournamentMatches', { title: 'tournamentMatches Page', tournamentMatches: rows});
     } catch (err){
         console.error(err);
         res.status(500).send('Database error');
     }
     
+});
+
+// tournamentMatches add route
+app.post('/tournamentMatches/add', async (req, res) => {
+    const { tournamentID, matchID } = req.body;
+    try {
+        await db.query(
+            'INSERT INTO tournamentMatches (tournamentID, matchID) VALUES (?, ?)',
+            [tournamentID, matchID]
+        );
+        res.redirect('/tournamentMatches');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Database insert error');
+    }
+});
+
+// tournamentMatches delete route
+app.post('/tournamentMatches/delete/:tournamentMatchesID', async (req, res) => {
+    const tournamentMatchesID = req.params.tournamentMatchesID;
+    try {
+        // Delete the team — cascading deletes handle other tables automatically
+        await db.query('DELETE FROM tournamentMatches WHERE tournamentMatchesID = ?', [tournamentMatchesID]);
+
+        // Redirect back to teams page
+        res.redirect('/tournamentMatches');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Database error while deleting tournamentMatches.');
+    }
 });
 
 /*
