@@ -5,7 +5,7 @@
 // Express
 const express = require('express');  // Import express
 const app = express();               // Instantiate express
-const PORT = 8299;                   // Choose a port number
+const PORT = 8399;                   // Choose a port number
 
 // Database
 const db = require('./dbconnector'); // Note: matches file name (db-connector.js)
@@ -28,6 +28,9 @@ app.engine('hbs', exphbs.engine({
 }))
 app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // Serve static files like CSS
 app.use(express.static(__dirname + '/public'));
@@ -52,6 +55,36 @@ app.get('/teams', async (req, res) => {
         res.status(500).send('Database error');
     }
     
+});
+
+// Teams add route
+app.post('/teams/add', async (req, res) => {
+    const { teamName, region, playerCount } = req.body;
+    try {
+        await db.query(
+            'INSERT INTO Teams (teamName, region, playerCount) VALUES (?, ?, ?)',
+            [teamName, region, playerCount]
+        );
+        res.redirect('/teams');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Database insert error');
+    }
+});
+
+// Teams delete route
+app.post('/teams/delete/:teamID', async (req, res) => {
+    const teamID = req.params.teamID;
+    try {
+        // Delete the team — cascading deletes handle other tables automatically
+        await db.query('DELETE FROM Teams WHERE teamID = ?', [teamID]);
+
+        // Redirect back to teams page
+        res.redirect('/teams');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Database error while deleting team.');
+    }
 });
 
 // Matches page route

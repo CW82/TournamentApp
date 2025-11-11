@@ -17,7 +17,9 @@
             <td>{{playerCount}}</td>
             <td>
                 <div class="delete-button">
-                <button type="button">Delete</button>
+                <form action="/teams/delete/{{teamID}}" method="POST" class="delete-button" onsubmit="return confirmDelete('{{teamName}}')">
+                    <button type="submit">Delete</button>
+                </form>
                 </div>
             </td> 
         </tr>
@@ -25,6 +27,18 @@
     </tbody>
 </table>
 
-    <body>
-        <button type="button">Add New</button>
-    </body>
+<form action="/teams/add" method="POST" class="add-form">
+    <h3>Add New Team</h3>
+    <div class="form-row">
+        <input type="text" name="teamName" placeholder="Team Name" required>
+        <input type="text" name="region" placeholder="Region" required>
+        <input type="number" name="playerCount" placeholder="Player Count" required>
+        <button type="submit">Add Team</button>
+    </div>
+</form>
+
+<script>
+function confirmDelete(teamName) {
+    return confirm(`Are you sure you want to delete "${teamName}"?`);
+}
+</script>

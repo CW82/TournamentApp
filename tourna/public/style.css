@@ -127,3 +127,53 @@ button {
 button:hover {
     background-color: #555f4b;
 }
+
+
+/* ADD FORM STYLING */
+
+.add-form {
+    background-color: #c4cebc;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+    margin-top: 20px;
+    
+     display: inline-block;
+}
+
+/* header */
+.add-form h3 {
+    margin-bottom: 20px;
+    color: #78866B;
+}
+
+/* row */
+.add-form .form-row {
+    display: flex;      
+    gap: 10px;  
+    align-items: center;
+}
+
+/* input boxeas */
+.add-form input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+/* submit button */
+.add-form button {
+    background-color: #78866B;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s;
+}
+
+.add-form button:hover {
+    background-color: #555f4b;
+}
