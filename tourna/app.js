@@ -5,7 +5,8 @@
 // Express
 const express = require('express');  // Import express
 const app = express();               // Instantiate express
-const PORT = 8399;                   // Choose a port number
+const PORT = 8498;                   // Choose a port number
+//8399
 
 // Database
 const db = require('./dbconnector'); // Note: matches file name (db-connector.js)
@@ -44,6 +45,10 @@ app.use(express.static(__dirname + '/public'));
 app.get('/', (req, res) => {
     res.render('index'); // Renders views/index.hbs
 });
+
+
+/* TEAMS */
+
 
 // Teams page route
 app.get('/teams', async (req, res) => {
@@ -87,6 +92,28 @@ app.post('/teams/delete/:teamID', async (req, res) => {
     }
 });
 
+// Teams update route
+app.post('/teams/update/:teamID', async (req, res) => {
+    const teamID = req.params.teamID;
+    const { teamName, region, playerCount } = req.body;
+
+    try {
+        await db.query(
+            'UPDATE Teams SET teamName = ?, region = ?, playerCount = ? WHERE teamID = ?',
+            [teamName, region, playerCount, teamID]
+        );
+        res.redirect('/teams');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Database error while updating team.');
+    }
+});
+
+
+
+/* MATCHES */
+
+
 // Matches page route
 app.get('/matches', async (req, res) => {
     try{
@@ -129,6 +156,27 @@ app.post('/matches/delete/:matchID', async (req, res) => {
     }
 });
 
+// Matches update route
+app.post('/matches/update/:matchID', async (req, res) => {
+    const { matchID } = req.params;
+    const { tournamentID, scheduledTime, winner } = req.body;
+    try {
+        await db.query(
+            'UPDATE Matches SET tournamentID = ?, scheduledTime = ?, winner = ? WHERE matchID = ?',
+            [tournamentID, scheduledTime, winner, matchID]
+        );
+        res.sendStatus(200);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Database update error');
+    }
+});
+
+
+
+/* TOURNAMENTS */
+
+
 // Tournaments page route
 app.get('/tournaments', async (req, res) => {
     try {
@@ -169,6 +217,27 @@ app.post('/tournaments/delete/:tournamentID', async (req, res) => {
         res.status(500).send('Database error while deleting tournament.');
     }
 });
+
+// Tournaments update route
+app.post('/tournaments/update/:tournamentID', async (req, res) => {
+    const { tournamentID } = req.params;
+    const { tournamentName, gameID, prizeMoney, location, startDate, endDate } = req.body;
+    try {
+        await db.query(
+            'UPDATE Tournaments SET tournamentName=?, gameID=?, prizeMoney=?, location=?, startDate=?, endDate=? WHERE tournamentID=?',
+            [tournamentName, gameID, prizeMoney, location, startDate, endDate, tournamentID]
+        );
+        res.sendStatus(200);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Database update error');
+    }
+});
+
+
+
+/* MATCHTEAMS */
+
 
 // matchTeams page route
 app.get('/matchTeams', async (req, res) => {
@@ -212,6 +281,26 @@ app.post('/matchTeams/delete/:matchTeamsID', async (req, res) => {
     }
 });
 
+// matchTeams update route
+app.post('/matchTeams/update/:id', async (req, res) => {
+    const { id } = req.params;
+    const { matchID, team1_teamID, team2_teamID } = req.body;
+    try {
+        await db.query(
+            'UPDATE matchTeams SET matchID=?, team1_teamID=?, team2_teamID=? WHERE matchTeamsID=?',
+            [matchID, team1_teamID, team2_teamID, id]
+        );
+        res.sendStatus(200);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Database update error');
+    }
+});
+
+
+/* TOURNAMENTMATCHES */
+
+
 // tournamentMatches page route
 app.get('/tournamentMatches', async (req, res) => {
     try{
@@ -253,6 +342,24 @@ app.post('/tournamentMatches/delete/:tournamentMatchesID', async (req, res) => {
         res.status(500).send('Database error while deleting tournamentMatches.');
     }
 });
+
+// tournamentMatches update route
+
+app.post('/tournamentMatches/update/:id', async (req, res) => {
+    const { id } = req.params;
+    const { tournamentID, matchID } = req.body;
+    try {
+        await db.query(
+            'UPDATE tournamentMatches SET tournamentID=?, matchID=? WHERE tournamentMatchesID=?',
+            [tournamentID, matchID, id]
+        );
+        res.sendStatus(200);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Database update error');
+    }
+});
+
 
 /*
     LISTENER

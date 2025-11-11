@@ -9,33 +9,65 @@
     </thead>
     <tbody>
         {{#each tournamentMatches}}
-        <tr>
+        <tr data-id="{{tournamentMatchesID}}">
             <td>{{tournamentMatchesID}}</td>
-            <td>{{tournamentID}}</td>
-            <td>{{matchID}}</td>
+            <td class="tournamentID">{{tournamentID}}</td>
+            <td class="matchID">{{matchID}}</td>
             <td>
-                <div class="delete-button">
-                <form action="/tournamentMatches/delete/{{tournamentMatchesID}}" method="POST" class="delete-button" onsubmit="return confirmDelete('{{tournamentMatchesID}}')">
-                    <button type="submit">Delete</button>
-                </form>
+                <div class="action-buttons">
+                    <button class="edit-btn">Edit</button>
+                    <form method="POST" class="delete-button" action="/tournamentMatches/delete/{{tournamentMatchesID}}" style="display:inline">
+                        <button type="submit" onclick="return confirmDelete('Record {{tournamentMatchesID}}')">Delete</button>
+                    </form>
                 </div>
-            </td> 
+            </td>
         </tr>
         {{/each}}
     </tbody>
 </table>
 
 <form action="/tournamentMatches/add" method="POST" class="add-form">
-    <h3>Add New Team</h3>
+    <h3>Add New tournamentMatches</h3>
     <div class="form-row">
-        <input type="number" name="tournamentID" placeholder="tournamentID" required>
-        <input type="number" name="matchID" placeholder="matchID" required>
-        <button type="submit">Add tournamentMatches</button>
+        <input type="text" name="tournamentID" placeholder="Tournament ID" required>
+        <input type="text" name="matchID" placeholder="Match ID" required>
+        <button type="submit">Add</button>
     </div>
 </form>
 
 <script>
-function confirmDelete(tournamentMatchesID) {
-    return confirm(`Are you sure you want to delete "${tournamentMatchesID}"?`);
-}
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const row = btn.closest('tr');
+            const id = row.dataset.id;
+            if (row.querySelector('input')) return;
+
+            const cells = ['tournamentID','matchID'];
+            cells.forEach(c => {
+                const val = row.querySelector(`.${c}`).textContent;
+                row.querySelector(`.${c}`).innerHTML = `<input type="text" name="${c}" value="${val}">`;
+            });
+
+            const saveBtn = document.createElement('button');
+            saveBtn.textContent = 'Save';
+            saveBtn.type = 'button';
+            btn.replaceWith(saveBtn);
+
+            saveBtn.addEventListener('click', async () => {
+                const formData = new URLSearchParams();
+                cells.forEach(c => formData.append(c, row.querySelector(`input[name="${c}"]`).value));
+
+                const response = await fetch(`/tournamentMatches/update/${id}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString()
+                });
+
+                if (response.ok) window.location.reload();
+                else alert('Error updating record');
+            });
+        });
+    });
+});
 </script>

@@ -10,35 +10,82 @@
     </thead>
     <tbody>
         {{#each matchTeams}}
-        <tr>
+        <tr data-id="{{matchTeamsID}}">
             <td>{{matchTeamsID}}</td>
-            <td>{{matchID}}</td>
-            <td>{{team1_teamID}}</td>
-            <td>{{team2_teamID}}</td>
+            <td class="matchID">{{matchID}}</td>
+            <td class="team1_teamID">{{team1_teamID}}</td>
+            <td class="team2_teamID">{{team2_teamID}}</td>
             <td>
-                <div class="delete-button">
-                <form action="/matchTeams/delete/{{matchTeamsID}}" method="POST" class="delete-button" onsubmit="return confirmDelete('{{matchTeamsID}}')">
-                    <button type="submit">Delete</button>
-                </form>
+                <div class="action-buttons">
+                    <button class="edit-btn">Edit</button>
+                    <form action="/matchTeams/delete/{{matchTeamsID}}" method="POST" class="delete-button" style="display:inline">
+                        <button type="submit" onclick="return confirmDelete('{{matchTeamsID}}')">Delete</button>
+                    </form>
                 </div>
-            </td> 
+            </td>
         </tr>
         {{/each}}
     </tbody>
 </table>
 
 <form action="/matchTeams/add" method="POST" class="add-form">
-    <h3>Add New Team</h3>
+    <h3>Add New matchTeam</h3>
     <div class="form-row">
-        <input type="number" name="matchID" placeholder="matchID" required>
-        <input type="number" name="team1_teamID" placeholder="team1_teamID" required>
-        <input type="number" name="team2_teamID" placeholder="team2_teamID" required>
-        <button type="submit">Add Team</button>
+        <input type="number" name="matchID" placeholder="Match ID" required>
+        <input type="number" name="team1_teamID" placeholder="Team 1 ID" required>
+        <input type="number" name="team2_teamID" placeholder="Team 2 ID" required>
+        <button type="submit">Add</button>
     </div>
 </form>
 
 <script>
-function confirmDelete(matchTeamsID) {
-    return confirm(`Are you sure you want to delete "${matchTeamsID}"?`);
+function confirmDelete(id) {
+    return confirm(`Are you sure you want to delete "${id}"?`);
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const row = btn.closest('tr');
+            const id = row.dataset.id;
+
+            // If already in edit mode, do nothing
+            if (row.querySelector('input')) return;
+
+            const matchID = row.querySelector('.matchID').textContent;
+            const team1 = row.querySelector('.team1_teamID').textContent;
+            const team2 = row.querySelector('.team2_teamID').textContent;
+
+            // Replace cells with input fields
+            row.querySelector('.matchID').innerHTML = `<input type="number" name="matchID" value="${matchID}">`;
+            row.querySelector('.team1_teamID').innerHTML = `<input type="number" name="team1_teamID" value="${team1}">`;
+            row.querySelector('.team2_teamID').innerHTML = `<input type="number" name="team2_teamID" value="${team2}">`;
+
+            // Replace Edit button with Save button
+            const saveBtn = document.createElement('button');
+            saveBtn.type = 'button';
+            saveBtn.textContent = 'Save';
+            btn.replaceWith(saveBtn);
+
+            saveBtn.addEventListener('click', async () => {
+                const data = new URLSearchParams();
+                data.append('matchID', row.querySelector('input[name="matchID"]').value);
+                data.append('team1_teamID', row.querySelector('input[name="team1_teamID"]').value);
+                data.append('team2_teamID', row.querySelector('input[name="team2_teamID"]').value);
+
+                const response = await fetch(`/matchTeams/update/${id}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: data.toString()
+                });
+
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    alert('Error updating matchTeam');
+                }
+            });
+        });
+    });
+});
 </script>

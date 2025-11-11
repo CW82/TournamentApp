@@ -10,18 +10,19 @@
     </thead>
     <tbody>
         {{#each teams}}
-        <tr>
+        <tr data-teamid="{{teamID}}">
             <td>{{teamID}}</td>
-            <td>{{teamName}}</td>
-            <td>{{region}}</td>
-            <td>{{playerCount}}</td>
+            <td class="teamName">{{teamName}}</td>
+            <td class="region">{{region}}</td>
+            <td class="playerCount">{{playerCount}}</td>
             <td>
-                <div class="delete-button">
-                <form action="/teams/delete/{{teamID}}" method="POST" class="delete-button" onsubmit="return confirmDelete('{{teamName}}')">
-                    <button type="submit">Delete</button>
-                </form>
+                <div class="action-buttons">
+                    <button class="edit-btn">Edit</button>
+                    <form method="POST" class="delete-button" action="/teams/delete/{{teamID}}" style="display:inline">
+                        <button type="submit" onclick="return confirmDelete('{{teamName}}')">Delete</button>
+                    </form>
                 </div>
-            </td> 
+            </td>
         </tr>
         {{/each}}
     </tbody>
@@ -41,4 +42,57 @@
 function confirmDelete(teamName) {
     return confirm(`Are you sure you want to delete "${teamName}"?`);
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const editButtons = document.querySelectorAll('.edit-btn');
+
+    editButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const row = btn.closest('tr');
+            const teamID = row.dataset.teamid;
+
+            // Prevent multiple edit forms
+            if (row.querySelector('input')) return;
+
+            const teamName = row.querySelector('.teamName').textContent;
+            const region = row.querySelector('.region').textContent;
+            const playerCount = row.querySelector('.playerCount').textContent;
+
+            // Replace cells with input fields
+            row.querySelector('.teamName').innerHTML = `<input type="text" name="teamName" value="${teamName}">`;
+            row.querySelector('.region').innerHTML = `<input type="text" name="region" value="${region}">`;
+            row.querySelector('.playerCount').innerHTML = `<input type="number" name="playerCount" value="${playerCount}">`;
+
+            // Replace Edit button with Save button
+            const saveBtn = document.createElement('button');
+            saveBtn.textContent = 'Save';
+            saveBtn.type = 'button';
+            btn.replaceWith(saveBtn);
+
+            saveBtn.addEventListener('click', async () => {
+                const newTeamName = row.querySelector('input[name="teamName"]').value;
+                const newRegion = row.querySelector('input[name="region"]').value;
+                const newPlayerCount = row.querySelector('input[name="playerCount"]').value;
+
+                const formData = new URLSearchParams();
+                formData.append('teamName', newTeamName);
+                formData.append('region', newRegion);
+                formData.append('playerCount', newPlayerCount);
+
+                const response = await fetch(`/teams/update/${teamID}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString()
+                });
+
+                if (response.ok) {
+                    // Reload page to show updated data
+                    window.location.reload();
+                } else {
+                    alert('Error updating team');
+                }
+            });
+        });
+    });
+});
 </script>

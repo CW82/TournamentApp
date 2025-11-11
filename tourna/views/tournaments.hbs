@@ -13,42 +13,74 @@
     </thead>
     <tbody>
         {{#each tournaments}}
-        <tr>
+        <tr data-tournamentid="{{tournamentID}}">
             <td>{{tournamentID}}</td>
-            <td>{{tournamentName}}</td>
-            <td>{{gameID}}</td>
-            <td>{{prizeMoney}}</td>
-            <td>{{location}}</td>
-            <td>{{formatDate startDate}}</td>
-            <td>{{formatDate endDate}}</td>
+            <td class="tournamentName">{{tournamentName}}</td>
+            <td class="gameID">{{gameID}}</td>
+            <td class="prizeMoney">{{prizeMoney}}</td>
+            <td class="location">{{location}}</td>
+            <td class="startDate">{{startDate}}</td>
+            <td class="endDate">{{endDate}}</td>
             <td>
-                <div class="delete-button">
-                <form action="/tournaments/delete/{{tournamentID}}" method="POST" class="delete-button" onsubmit="return confirmDelete('{{tournamentID}}')">
-                    <button type="submit">Delete</button>
-                </form>
+                <div class="action-buttons">
+                    <button class="edit-btn">Edit</button>
+                    <form method="POST" class="delete-button" action="/tournaments/delete/{{tournamentID}}" style="display:inline">
+                        <button type="submit" onclick="return confirmDelete('{{tournamentName}}')">Delete</button>
+                    </form>
                 </div>
-            </td> 
+            </td>
         </tr>
         {{/each}}
     </tbody>
 </table>
 
 <form action="/tournaments/add" method="POST" class="add-form">
-    <h3>Add New Team</h3>
+    <h3>Add New Tournament</h3>
     <div class="form-row">
-        <input type="text" name="tournamentName" placeholder="tournamentName" required>
-        <input type="number" name="gameID" placeholder="gameID" required>
-        <label for="prizeMoney">prizeMoney (USD):</label>
-        <input type="number" id="prizeMoney" name="prizeMoney" step="0.01" min="0" placeholder="0.00" required>
-        <input type="text" name="location" placeholder="location" required>
-        <input type="date" name="startDate" placeholder="startDate" required>
-        <input type="date" name="endDate" placeholder="endDate" required>
-        <button type="submit">Add tournamentMatches</button>
+        <input type="text" name="tournamentName" placeholder="Tournament Name" required>
+        <input type="text" name="gameID" placeholder="Game ID" required>
+        <input type="text" name="prizeMoney" placeholder="Prize Money" required>
+        <input type="text" name="location" placeholder="Location" required>
+        <input type="date" name="startDate" required>
+        <input type="date" name="endDate" required>
+        <button type="submit">Add Tournament</button>
     </div>
 </form>
 
 <script>
-function confirmDelete(tournamentMatchesID) {
-    return confirm(`Are you sure you want to delete "${tournamentMatchesID}"?`);
-}
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const row = btn.closest('tr');
+            const id = row.dataset.tournamentid;
+            if (row.querySelector('input')) return;
+
+            const cells = ['tournamentName','gameID','prizeMoney','location','startDate','endDate'];
+            cells.forEach(c => {
+                const val = row.querySelector(`.${c}`).textContent;
+                const type = c.includes('Date') ? 'date' : 'text';
+                row.querySelector(`.${c}`).innerHTML = `<input type="${type}" name="${c}" value="${val}">`;
+            });
+
+            const saveBtn = document.createElement('button');
+            saveBtn.textContent = 'Save';
+            saveBtn.type = 'button';
+            btn.replaceWith(saveBtn);
+
+            saveBtn.addEventListener('click', async () => {
+                const formData = new URLSearchParams();
+                cells.forEach(c => formData.append(c, row.querySelector(`input[name="${c}"]`).value));
+
+                const response = await fetch(`/tournaments/update/${id}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString()
+                });
+
+                if (response.ok) window.location.reload();
+                else alert('Error updating tournament');
+            });
+        });
+    });
+});
 </script>

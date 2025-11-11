@@ -10,35 +10,76 @@
     </thead>
     <tbody>
         {{#each matches}}
-        <tr>
+        <tr data-matchid="{{matchID}}">
             <td>{{matchID}}</td>
-            <td>{{tournamentID}}</td>
-            <td>{{scheduledTime}}</td>
-            <td>{{winner}}</td>
+            <td class="tournamentID">{{tournamentID}}</td>
+            <td class="scheduledTime">{{scheduledTime}}</td>
+            <td class="winner">{{winner}}</td>
             <td>
-                <div class="delete-button">
-                <form action="/matches/delete/{{matchID}}" method="POST" class="delete-button" onsubmit="return confirmDelete('{{matchID}}')">
-                    <button type="submit">Delete</button>
-                </form>
+                <div class="action-buttons">
+                    <button class="edit-btn">Edit</button>
+                    <form method="POST" class="delete-button" action="/matches/delete/{{matchID}}" style="display:inline">
+                        <button type="submit" onclick="return confirmDelete('Match {{matchID}}')">Delete</button>
+                    </form>
                 </div>
-            </td> 
+            </td>
         </tr>
         {{/each}}
     </tbody>
 </table>
 
 <form action="/matches/add" method="POST" class="add-form">
-    <h3>Add New Team</h3>
+    <h3>Add New Match</h3>
     <div class="form-row">
-        <input type="number" name="tournamentID" placeholder="tournamentID" required>
-        <input type="datetime-local" name="scheduledTime" placeholder="scheduledTime" required>
-        <input type="number" name="winner" placeholder="winner" required>
+        <input type="text" name="tournamentID" placeholder="Tournament ID" required>
+        <input type="datetime-local" name="scheduledTime" required>
+        <input type="text" name="winner" placeholder="Winner">
         <button type="submit">Add Match</button>
     </div>
 </form>
 
 <script>
-function confirmDelete(matchID) {
-    return confirm(`Are you sure you want to delete "${matchID}"?`);
+function confirmDelete(name) {
+    return confirm(`Are you sure you want to delete "${name}"?`);
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const row = btn.closest('tr');
+            const id = row.dataset.matchid;
+
+            if (row.querySelector('input')) return;
+
+            const tournamentID = row.querySelector('.tournamentID').textContent;
+            const scheduledTime = row.querySelector('.scheduledTime').textContent;
+            const winner = row.querySelector('.winner').textContent;
+
+            row.querySelector('.tournamentID').innerHTML = `<input type="text" name="tournamentID" value="${tournamentID}">`;
+            row.querySelector('.scheduledTime').innerHTML = `<input type="datetime-local" name="scheduledTime" value="${scheduledTime}">`;
+            row.querySelector('.winner').innerHTML = `<input type="text" name="winner" value="${winner}">`;
+
+            const saveBtn = document.createElement('button');
+            saveBtn.textContent = 'Save';
+            saveBtn.type = 'button';
+            btn.replaceWith(saveBtn);
+
+            saveBtn.addEventListener('click', async () => {
+                const data = new URLSearchParams();
+                data.append('tournamentID', row.querySelector('input[name="tournamentID"]').value);
+                data.append('scheduledTime', row.querySelector('input[name="scheduledTime"]').value);
+                data.append('winner', row.querySelector('input[name="winner"]').value);
+
+                const response = await fetch(`/matches/update/${id}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: data.toString()
+                });
+
+                if (response.ok) window.location.reload();
+                else alert('Error updating match');
+            });
+        });
+    });
+});
 </script>
