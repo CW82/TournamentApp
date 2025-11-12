@@ -16,10 +16,3 @@ errors, simplify the scheduling for organizers and viewers, and make overall vie
 will be saved year to year for tournament administrator records to see the growth of the
 tournaments each year.
 
-
-■ tournamentID: INT, FK
-■ matchID: INT, FK
-■ PK: tournamentID, gameID, matchID
-○ Relationships
-■ 1:M for both because one match can be in the matchTeams record (each
-team participating) and multiple teams can also be in the matchTeams
