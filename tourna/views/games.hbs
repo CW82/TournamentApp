@@ -1,0 +1,99 @@
+<h2>Games</h2>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>gameID</th>
+            <th>title</th>
+            <th>developer</th>
+            <th>genre</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each games}}
+        <tr data-gameid="{{gameID}}">
+            <td>{{gameID}}</td>
+            <td class="title">{{title}}</td>
+            <td class="developer">{{developer}}</td>
+            <td class="genre">{{genre}}</td>
+
+            <td>
+                <div class="action-buttons">
+                    <button class="edit-btn">Edit</button>
+                    <form method="POST" action="/games/delete/{{gameID}}" style="display:inline">
+                        <button type="submit" class="delete-btn" onclick="return confirmDelete('Game {{gameID}}')">Delete</button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<br>
+
+<form action="/games/add" method="POST" class="add-form">
+    <h3>Add New Game</h3>
+    <div class="form-row">
+        <input type="text" name="title" placeholder="Title" required>
+        <input type="text" name="developer" placeholder="Developer" required>
+        <input type="text" name="genre" placeholder="Genre" required>
+        <button type="submit">Add Game</button>
+    </div>
+</form>
+
+<script>
+function confirmDelete(name) {
+    return confirm(`Are you sure you want to delete "${name}"?`);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const row = btn.closest('tr');
+            const id = row.dataset.gameid;
+            if (row.querySelector('input')) return;
+
+            const title = row.querySelector('.title').textContent.trim();
+            const developer = row.querySelector('.developer').textContent.trim();
+            const genre = row.querySelector('.genre').textContent.trim();
+
+            row.querySelector('.title').innerHTML =
+                `<input type="text" name="title" value="${title}">`;
+
+            row.querySelector('.developer').innerHTML =
+                `<input type="text" name="developer" value="${developer}">`;
+
+            row.querySelector('.genre').innerHTML =
+                `<input type="text" name="genre" value="${genre}">`;
+            const saveBtn = document.createElement('button');
+            saveBtn.textContent = 'Save';
+            saveBtn.type = 'button';
+            btn.replaceWith(saveBtn);
+
+            saveBtn.addEventListener('click', async () => {
+                const data = new URLSearchParams();
+                data.append('title', row.querySelector('input[name="title"]').value);
+                data.append('developer', row.querySelector('input[name="developer"]').value);
+                data.append('genre', row.querySelector('input[name="genre"]').value);
+
+                const response = await fetch(`/games/update/${id}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: data.toString()
+                });
+
+                if (response.ok) window.location.reload();
+                else alert('Error updating game');
+            });
+        });
+    });
+});
+</script>
+
+<style>
+.action-buttons button {
+    margin-right: 4px;
+}
+</style>

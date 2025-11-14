@@ -6,7 +6,6 @@
 const express = require('express');  // Import express
 const app = express();               // Instantiate express
 const PORT = 8498;                   // Choose a port number
-//8399
 
 // Database
 const db = require('./dbconnector'); // Note: matches file name (db-connector.js)
@@ -360,6 +359,66 @@ app.post('/tournamentMatches/update/:id', async (req, res) => {
     }
 });
 
+/* GAMES */
+
+// games page route
+app.get('/games', async (req, res) => {
+    try{
+        const [rows, fields] = await db.query('SELECT * FROM Games');
+        res.render('games', { title: 'Games Page', games: rows});
+    } catch (err){
+        console.error(err);
+        res.status(500).send('Database error');
+    }
+    
+});
+
+// games add route
+app.post('/games/add', async (req, res) => {
+    const { title, developer, genre } = req.body;
+    try {
+        await db.query(
+            'INSERT INTO Games (title, developer, genre) VALUES (?, ?, ?)',
+            [title, developer, genre]
+        );
+        res.redirect('/games');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Database insert error');
+    }
+});
+
+// games delete route
+app.post('/games/delete/:gameID', async (req, res) => {
+    const gameID = req.params.gameID;
+    try {
+        // Delete the team — cascading deletes handle other tables automatically
+        await db.query('DELETE FROM Games WHERE gameID = ?', [gameID]);
+
+        // Redirect back to teams page
+        res.redirect('/games');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Database error while deleting games.');
+    }
+});
+
+// games update route
+
+app.post('/games/update/:id', async (req, res) => {
+    const { id } = req.params;
+    const { title, developer, genre } = req.body;
+    try {
+        await db.query(
+            'UPDATE Games SET title=?, developer=?, genre=? WHERE gameID=?',
+            [ title, developer, genre, id]
+        );
+        res.sendStatus(200);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Database update error');
+    }
+});
 
 /*
     LISTENER
