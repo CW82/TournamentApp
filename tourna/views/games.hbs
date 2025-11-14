@@ -1,5 +1,3 @@
-<h2>Games</h2>
-
 <table border="1">
     <thead>
         <tr>
@@ -21,8 +19,8 @@
             <td>
                 <div class="action-buttons">
                     <button class="edit-btn">Edit</button>
-                    <form method="POST" action="/games/delete/{{gameID}}" style="display:inline">
-                        <button type="submit" class="delete-btn" onclick="return confirmDelete('Game {{gameID}}')">Delete</button>
+                    <form method="POST" class="delete-button" action="/games/delete/{{gameID}}" style="display:inline">
+                        <button type="submit" onclick="return confirmDelete('Game {{gameID}}')">Delete</button>
                     </form>
                 </div>
             </td>
