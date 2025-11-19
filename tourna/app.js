@@ -421,6 +421,20 @@ app.post('/games/update/:id', async (req, res) => {
 });
 
 /*
+    RESET
+*/
+app.post('/reset', async (req, res) => {
+    try {
+        await db.query("CALL sp_reset_database()");
+        res.redirect('/');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Database reset failed");
+    }
+});
+
+
+/*
     LISTENER
 */
 app.listen(PORT, () => {
