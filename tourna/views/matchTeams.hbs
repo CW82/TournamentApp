@@ -3,8 +3,7 @@
         <tr>
             <th>matchTeamsID</th>
             <th>matchID</th>
-            <th>team1_teamID</th>
-            <th>team2_teamID</th>
+            <th>teamID</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -13,8 +12,7 @@
         <tr data-id="{{matchTeamsID}}">
             <td>{{matchTeamsID}}</td>
             <td class="matchID">{{matchID}}</td>
-            <td class="team1_teamID">{{team1_teamID}}</td>
-            <td class="team2_teamID">{{team2_teamID}}</td>
+            <td class="teamID">{{teamID}}</td>
             <td>
                 <div class="action-buttons">
                     <button class="edit-btn">Edit</button>
@@ -32,8 +30,7 @@
     <h3>Add New matchTeam</h3>
     <div class="form-row">
         <input type="number" name="matchID" placeholder="Match ID" required>
-        <input type="number" name="team1_teamID" placeholder="Team 1 ID" required>
-        <input type="number" name="team2_teamID" placeholder="Team 2 ID" required>
+        <input type="number" name="teamID" placeholder="Team ID" required>
         <button type="submit">Add matchTeam</button>
     </div>
 </form>
