@@ -178,6 +178,28 @@ button:hover {
     font-size: 1rem;
 }
 
+/* make select elements in forms match the input styling */
+.add-form select,
+/* style selects placed inside tables (inline edit) to match inputs */
+table select,
+td select,
+select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    background: white;
+}
+
+/* style inline-edit inputs inside table to match add-form inputs */
+table input,
+td input {
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
+
 /* submit button */
 .add-form button {
     background-color: #78866B;

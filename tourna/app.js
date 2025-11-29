@@ -116,8 +116,10 @@ app.post('/teams/update/:teamID', async (req, res) => {
 // Matches page route
 app.get('/matches', async (req, res) => {
     try{
-        const [rows, fields] = await db.query('SELECT * FROM Matches');
-        res.render('matches', { title: 'Matches Page', matches: rows});
+        const [rows] = await db.query('SELECT * FROM Matches');
+        // fetch tournaments to populate dropdowns (show name for user)
+        const [tournaments] = await db.query('SELECT t.tournamentID, t.tournamentName, g.title AS gameTitle FROM Tournaments t LEFT JOIN Games g ON t.gameID = g.gameID');
+        res.render('matches', { title: 'Matches Page', matches: rows, tournaments });
     } catch (err){
         console.error(err);
         res.status(500).send('Database error');

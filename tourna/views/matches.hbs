@@ -31,12 +31,24 @@
 <form action="/matches/add" method="POST" class="add-form">
     <h3>Add New Match</h3>
     <div class="form-row">
-        <input type="text" name="tournamentID" placeholder="Tournament ID" required>
+        <select name="tournamentID" required>
+            <option value="" disabled selected>Select tournament</option>
+            {{#each tournaments}}
+                <option value="{{tournamentID}}">{{tournamentName}} (ID: {{tournamentID}})</option>
+            {{/each}}
+        </select>
         <input type="datetime-local" name="scheduledTime" required>
         <input type="text" name="winner" placeholder="Winner">
         <button type="submit">Add Match</button>
     </div>
 </form>
+
+<!-- options template used by the client-side edit form -->
+<script id="tournament-options" type="text/template">
+    {{#each tournaments}}
+        <option value="{{tournamentID}}">{{tournamentName}} (ID: {{tournamentID}})</option>
+    {{/each}}
+</script>
 
 <script>
 function confirmDelete(name) {
@@ -55,7 +67,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const scheduledTime = row.querySelector('.scheduledTime').textContent;
             const winner = row.querySelector('.winner').textContent;
 
-            row.querySelector('.tournamentID').innerHTML = `<input type="text" name="tournamentID" value="${tournamentID}">`;
+            // Replace tournamentID cell with a select populated from the server-rendered options
+            const optionsHtml = document.getElementById('tournament-options').innerHTML;
+            row.querySelector('.tournamentID').innerHTML = `<select name="tournamentID">${optionsHtml}</select>`;
+            // set currently-selected value
+            const select = row.querySelector('select[name="tournamentID"]');
+            if (select) select.value = tournamentID.trim();
+
             row.querySelector('.scheduledTime').innerHTML = `<input type="datetime-local" name="scheduledTime" value="${scheduledTime}">`;
             row.querySelector('.winner').innerHTML = `<input type="text" name="winner" value="${winner}">`;
 
@@ -66,9 +84,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             saveBtn.addEventListener('click', async () => {
                 const data = new URLSearchParams();
-                data.append('tournamentID', row.querySelector('input[name="tournamentID"]').value);
-                data.append('scheduledTime', row.querySelector('input[name="scheduledTime"]').value);
-                data.append('winner', row.querySelector('input[name="winner"]').value);
+                data.append('tournamentID', row.querySelector('[name="tournamentID"]').value);
+                data.append('scheduledTime', row.querySelector('[name="scheduledTime"]').value);
+                data.append('winner', row.querySelector('[name="winner"]').value);
 
                 const response = await fetch(`/matches/update/${id}`, {
                     method: 'POST',
