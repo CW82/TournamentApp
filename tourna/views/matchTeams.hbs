@@ -1,9 +1,9 @@
 <table border="1">
     <thead>
         <tr>
-            <th>matchTeamsID</th>
-            <th>matchID</th>
-            <th>teamID</th>
+            <th>Match Teams ID</th>
+            <th>Match ID</th>
+            <th>Team ID</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -12,7 +12,7 @@
         <tr data-id="{{matchTeamsID}}">
             <td>{{matchTeamsID}}</td>
             <td class="matchID">{{matchID}}</td>
-            <td class="teamID">{{teamID}}</td>
+            <td class="teamName">{{teamName}} (ID: {{teamID}})</td>
             <td>
                 <div class="action-buttons">
                     <button class="edit-btn">Edit</button>
@@ -27,11 +27,11 @@
 </table>
 
 <form action="/matchTeams/add" method="POST" class="add-form">
-    <h3>Add New matchTeam</h3>
+    <h3>Add New Match Team</h3>
     <div class="form-row">
         <input type="number" name="matchID" placeholder="Match ID" required>
         <input type="number" name="teamID" placeholder="Team ID" required>
-        <button type="submit">Add matchTeam</button>
+        <button type="submit">Add Match Team</button>
     </div>
 </form>
 
@@ -50,13 +50,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (row.querySelector('input')) return;
 
             const matchID = row.querySelector('.matchID').textContent;
-            const team1 = row.querySelector('.team1_teamID').textContent;
-            const team2 = row.querySelector('.team2_teamID').textContent;
+            const teamName = row.querySelector('.teamName').textContent;
 
             // Replace cells with input fields
             row.querySelector('.matchID').innerHTML = `<input type="number" name="matchID" value="${matchID}">`;
-            row.querySelector('.team1_teamID').innerHTML = `<input type="number" name="team1_teamID" value="${team1}">`;
-            row.querySelector('.team2_teamID').innerHTML = `<input type="number" name="team2_teamID" value="${team2}">`;
+            row.querySelector('.teamName').innerHTML = `<input type="number" name="teamID" value="${teamName.match(/\d+/)[0]}">`;
 
             // Replace Edit button with Save button
             const saveBtn = document.createElement('button');
@@ -67,8 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
             saveBtn.addEventListener('click', async () => {
                 const data = new URLSearchParams();
                 data.append('matchID', row.querySelector('input[name="matchID"]').value);
-                data.append('team1_teamID', row.querySelector('input[name="team1_teamID"]').value);
-                data.append('team2_teamID', row.querySelector('input[name="team2_teamID"]').value);
+                data.append('teamID', row.querySelector('input[name="teamID"]').value);
 
                 const response = await fetch(`/matchTeams/update/${id}`, {
                     method: 'POST',

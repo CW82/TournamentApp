@@ -241,7 +241,7 @@ app.post('/tournaments/update/:tournamentID', async (req, res) => {
 // matchTeams page route
 app.get('/matchTeams', async (req, res) => {
     try{
-        const [rows, fields] = await db.query('SELECT * FROM matchTeams');
+        const [rows, fields] = await db.query('SELECt mt.matchTeamsID, mt.matchID, mt.teamID, t.teamName FROM matchTeams mt JOIN Teams t ON mt.teamID = t.teamID');  //potentially wrong, if so, fix later. EDIT(UPDATE): it worked, 
         res.render('matchTeams', { title: 'matchTeams Page', matchTeams: rows});
     } catch (err){
         console.error(err);
