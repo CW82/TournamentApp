@@ -101,3 +101,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 </script>
+
+<script>
+// Fallback: if the server-rendered select has no options (other than placeholder), fetch tournaments
+document.addEventListener('DOMContentLoaded', () => {
+    const addSelect = document.querySelector('form.add-form select[name="tournamentID"]');
+    const templateTag = document.getElementById('tournament-options');
+    if (addSelect && addSelect.options.length <= 1) {
+        fetch('/api/tournaments')
+            .then(r => r.json())
+            .then(data => {
+                data.forEach(t => {
+                    const opt = document.createElement('option');
+                    opt.value = t.tournamentID;
+                    opt.textContent = `${t.tournamentName} (ID: ${t.tournamentID})`;
+                    addSelect.appendChild(opt);
+                });
+
+                // also populate the client-side template used for inline edits
+                if (templateTag) {
+                    templateTag.innerHTML = data.map(t => `<option value="${t.tournamentID}">${t.tournamentName} (ID: ${t.tournamentID})</option>`).join('');
+                }
+            })
+            .catch(err => console.error('Failed to load tournaments for select:', err));
+    }
+});
+</script>

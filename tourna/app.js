@@ -239,6 +239,17 @@ app.post('/tournaments/update/:tournamentID', async (req, res) => {
 
 /* MATCHTEAMS */
 
+// API endpoint to return tournaments as JSON (used by client-side fallback)
+app.get('/api/tournaments', async (req, res) => {
+    try {
+        const [rows] = await db.query('SELECT tournamentID, tournamentName FROM Tournaments');
+        res.json(rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
 
 // matchTeams page route
 app.get('/matchTeams', async (req, res) => {
