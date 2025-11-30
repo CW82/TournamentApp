@@ -273,7 +273,7 @@ app.get('/matchTeams', async (req, res) => {
             SELECT mt.matchTeamsID, mt.matchID, mt.teamID, t.teamName
             FROM matchTeams mt
             JOIN Teams t ON mt.teamID = t.teamID
-            ORDER BY mt.matchID ASC
+            ORDER BY mt.matchTeamsID, mt.matchID ASC
         `);
 
         const [teams] = await db.query(`SELECT teamID, teamName FROM Teams`);
