@@ -70,12 +70,14 @@ tbody tr:nth-child(even) {
 /* rounded corners */
 table {
     border-radius: 2px;
-    overflow: hidden;
+    overflow: visible;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-tbody td, thead th {
-    text-align: center;
+/* Ensure select dropdowns can render above clipped parents */
+select {
+  position: relative;
+  z-index: 1000;
 }
 
 /* edit buttons */

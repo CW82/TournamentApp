@@ -3,13 +3,13 @@
         <tr>
             <th>Match Teams ID</th>
             <th>Match ID</th>
-            <th>Team ID</th>
+            <th>Team Name</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         {{#each matchTeams}}
-        <tr data-id="{{matchTeamsID}}">
+        <tr data-id="{{matchTeamsID}}" data-teamid="{{teamID}}" data-teamname="{{teamName}}">
             <td>{{matchTeamsID}}</td>
             <td class="matchID">{{matchID}}</td>
             <td class="teamName">{{teamID}} ({{teamName}})</td>
@@ -74,11 +74,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (row.querySelector('input')) return;
 
             const matchID = row.querySelector('.matchID').textContent;
-            const teamName = row.querySelector('.teamName').textContent;
+            const teamID = row.dataset.teamid;
+            const teamName = row.dataset.teamname;
 
             // Replace cells with input fields
             row.querySelector('.matchID').innerHTML = `<input type="number" name="matchID" value="${matchID}">`;
-            row.querySelector('.teamName').innerHTML = `<input type="number" name="teamID" value="${teamName.match(/\d+/)[0]}">`;
+            row.querySelector('.teamName').innerHTML = `<input type="number" name="teamID" value="${teamID}" placeholder="Team ID"> <span>${teamName}</span>`;
 
             // Replace Edit button with Save button
             const saveBtn = document.createElement('button');

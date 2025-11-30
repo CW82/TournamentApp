@@ -33,9 +33,17 @@
     <div class="form-row">
         <select name="tournamentID" required>
             <option value="" disabled selected>Select tournament</option>
-            {{#each tournaments}}
-                <option value="{{tournamentID}}">{{tournamentName}} (ID: {{tournamentID}})</option>
-            {{/each}}
+            {{#if tournaments}}
+                {{#if tournaments.length}}
+                    {{#each tournaments}}
+                        <option value="{{tournamentID}}">{{tournamentName}} (ID: {{tournamentID}})</option>
+                    {{/each}}
+                {{else}}
+                    <option value="" disabled>No tournaments available</option>
+                {{/if}}
+            {{else}}
+                <option value="" disabled>No tournaments available</option>
+            {{/if}}
         </select>
         <input type="datetime-local" name="scheduledTime" required>
         <select name="winner" id="winner" required>
@@ -52,9 +60,17 @@
 
 <!-- options template used by the client-side edit form -->
 <script id="tournament-options" type="text/template">
-    {{#each tournaments}}
-        <option value="{{tournamentID}}">{{tournamentName}} (ID: {{tournamentID}})</option>
-    {{/each}}
+    {{#if tournaments}}
+        {{#if tournaments.length}}
+            {{#each tournaments}}
+                <option value="{{tournamentID}}">{{tournamentName}} (ID: {{tournamentID}})</option>
+            {{/each}}
+        {{else}}
+            <option value="" disabled>No tournaments available</option>
+        {{/if}}
+    {{else}}
+        <option value="" disabled>No tournaments available</option>
+    {{/if}}
 </script>
 
 <script>
