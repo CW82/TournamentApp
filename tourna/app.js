@@ -118,13 +118,17 @@ app.get('/matches', async (req, res) => {
     try{
         const [rows] = await db.query('SELECT * FROM Matches');
         // fetch tournaments to populate dropdowns (show name for user)
-        const [tournaments] = await db.query('SELECT t.tournamentID, t.tournamentName, g.title AS gameTitle FROM Tournaments t LEFT JOIN Games g ON t.gameID = g.gameID');
+        const [tournaments] = await db.query('SELECT tournamentID, tournamentName FROM Tournaments'); //potentially wrong
+
+        // DEBUG
+        console.log('Matches route - tournaments (sample):', Array.isArray(tournaments) ? tournaments.slice(0,5) : tournaments);
+        console.log('Matches route - tournaments count:', Array.isArray(tournaments) ? tournaments.length : 'not an array');
+
         res.render('matches', { title: 'Matches Page', matches: rows, tournaments });
     } catch (err){
         console.error(err);
         res.status(500).send('Database error');
     }
-    
 });
 
 // Matches add route
