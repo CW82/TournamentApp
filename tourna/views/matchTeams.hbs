@@ -12,7 +12,7 @@
         <tr data-id="{{matchTeamsID}}">
             <td>{{matchTeamsID}}</td>
             <td class="matchID">{{matchID}}</td>
-            <td class="teamName">{{teamName}} (ID: {{teamID}})</td>
+            <td class="teamName">{{teamID}} ({{teamName}})</td>
             <td>
                 <div class="action-buttons">
                     <button class="edit-btn">Edit</button>
@@ -29,11 +29,35 @@
 <form action="/matchTeams/add" method="POST" class="add-form">
     <h3>Add New Match Team</h3>
     <div class="form-row">
-        <input type="number" name="matchID" placeholder="Match ID" required>
-        <input type="number" name="teamID" placeholder="Team ID" required>
+        <select name="matchID" required>
+            <option value="" disabled selected>Select Match</option>
+            {{#each matches}}
+                <option value="{{matchID}}">Match {{matchID}}</option>
+            {{/each}}
+        </select>
+        <select name="teamID" required>
+            <option value="" disabled selected>Select Team</option>
+            {{#each teams}}
+                <option value="{{teamID}}">{{teamName}} (ID: {{teamID}})</option>
+            {{/each}}
+        </select>
         <button type="submit">Add Match Team</button>
     </div>
 </form>
+
+<!-- team options template -->
+<script id="team-options" type="text/template">
+    {{#each teams}}
+        <option value="{{teamID}}">{{teamName}} (ID: {{teamID}})</option>
+    {{/each}}
+</script>
+
+<!-- match options template -->
+<script id="match-options" type="text/template">
+    {{#each matches}}
+        <option value="{{matchID}}">Match {{matchID}}</option>
+    {{/each}}
+</script>
 
 <script>
 function confirmDelete(id) {

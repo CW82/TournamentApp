@@ -16,7 +16,7 @@
         <tr data-tournamentid="{{tournamentID}}">
             <td>{{tournamentID}}</td>
             <td class="tournamentName">{{tournamentName}}</td>
-            <td class="gameID">{{gameID}}</td>
+            <td class="gameID">{{gameID}} ({{gameTitle}})</td>
             <td class="prizeMoney">{{prizeMoney}}</td>
             <td class="location">{{location}}</td>
             <td class="startDate">{{startDate}}</td>
@@ -38,7 +38,12 @@
     <h3>Add New Tournament</h3>
     <div class="form-row">
         <input type="text" name="tournamentName" placeholder="Tournament Name" required>
-        <input type="text" name="gameID" placeholder="Game ID" required>
+        <select name="gameID" required>
+            <option value="" disabled selected>Select Game</option>
+            {{#each games}}
+                <option value="{{gameID}}">{{title}} (ID: {{gameID}})</option>
+            {{/each}}
+        </select>
         <input type="text" name="prizeMoney" placeholder="Prize Money" required>
         <input type="text" name="location" placeholder="Location" required>
         <input type="date" name="startDate" required>
@@ -46,6 +51,14 @@
         <button type="submit">Add Tournament</button>
     </div>
 </form>
+
+<script>
+    const games = [
+        {{#each games}}
+            { gameID: {{gameID}}, title: "{{title}}" },
+        {{/each}}
+    ];
+</script>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {

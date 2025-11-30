@@ -12,9 +12,9 @@
         {{#each matches}}
         <tr data-matchid="{{matchID}}">
             <td>{{matchID}}</td>
-            <td class="tournamentID">{{tournamentID}}</td>
+            <td class="tournamentID">{{tournamentID}} ({{tournamentName}})</td>
             <td class="scheduledTime">{{scheduledTime}}</td>
-            <td class="winner">{{winner}}</td>
+            <td class="winner">{{winner}} ({{winnerName}})</td>
             <td>
                 <div class="action-buttons">
                     <button class="edit-btn">Edit</button>
@@ -38,7 +38,14 @@
             {{/each}}
         </select>
         <input type="datetime-local" name="scheduledTime" required>
-        <input type="text" name="winner" placeholder="Winner">
+        <select name="winner" id="winner" required>
+            <option value="" disabled selected>Select Winner</option>
+            {{#each teams}}
+                <option value="{{this.teamID}}">
+                    {{this.teamID}} ({{this.teamName}})
+                </option>
+            {{/each}}
+        </select>
         <button type="submit">Add Match</button>
     </div>
 </form>

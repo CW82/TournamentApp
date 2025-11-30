@@ -116,10 +116,26 @@ app.post('/teams/update/:teamID', async (req, res) => {
 // Matches page route
 app.get('/matches', async (req, res) => {
     try{
-        const [rows] = await db.query('SELECT * FROM Matches');
+        const [rows] = await db.query(`
+            SELECT 
+                m.*,
+                t.tournamentName,
+                w.teamName AS winnerName
+            FROM Matches m
+            LEFT JOIN Tournaments t ON m.tournamentID = t.tournamentID
+            LEFT JOIN Teams w ON m.winner = w.teamID
+        `);
+        // Get teams for dropdown
+        const [teams] = await db.query(`
+            SELECT teamID, teamName FROM Teams ORDER BY teamName
+        `);
         // fetch tournaments to populate dropdowns (show name for user)
         const [tournaments] = await db.query('SELECT t.tournamentID, t.tournamentName, g.title AS gameTitle FROM Tournaments t LEFT JOIN Games g ON t.gameID = g.gameID');
-        res.render('matches', { title: 'Matches Page', matches: rows, tournaments });
+           res.render('matches', {
+            matches: rows,
+            teams,
+            tournaments
+        });
     } catch (err){
         console.error(err);
         res.status(500).send('Database error');
@@ -131,10 +147,10 @@ app.get('/matches', async (req, res) => {
 app.post('/matches/add', async (req, res) => {
     const { tournamentID, scheduledTime, winner } = req.body;
     try {
-        await db.query(
-            'INSERT INTO Matches (tournamentID, scheduledTime, winner) VALUES (?, ?, ?)',
-            [tournamentID, scheduledTime, winner]
-        );
+        await db.query(`
+            INSERT INTO Matches (tournamentID, scheduledTime, winner)
+            VALUES (?, ?, ?)
+        `, [tournamentID, scheduledTime, winner]);
         res.redirect('/matches');
     } catch (err) {
         console.error(err);
@@ -181,11 +197,23 @@ app.post('/matches/update/:matchID', async (req, res) => {
 // Tournaments page route
 app.get('/tournaments', async (req, res) => {
     try {
-        const [rows, fields] = await db.query('SELECT * FROM Tournaments');
-        res.render('tournaments', { title: 'Tournaments Page', tournaments: rows});
+        const [tournaments] = await db.query(`
+            SELECT 
+                t.*, 
+                g.title AS gameTitle
+            FROM Tournaments t
+            LEFT JOIN Games g ON t.gameID = g.gameID
+        `);
+        const [games] = await db.query(`SELECT gameID, title FROM Games`);
+
+        res.render('tournaments', {
+            title: "Tournaments Page",
+            tournaments,
+            games
+        });
     } catch (err) {
         console.error(err);
-        res.status(500).send('Database error');
+        res.status(500).send("Database error");
     }
 });
 
@@ -240,16 +268,29 @@ app.post('/tournaments/update/:tournamentID', async (req, res) => {
 /* MATCHTEAMS */
 
 
-// matchTeams page route
 app.get('/matchTeams', async (req, res) => {
     try{
-        const [rows, fields] = await db.query('SELECt mt.matchTeamsID, mt.matchID, mt.teamID, t.teamName FROM matchTeams mt JOIN Teams t ON mt.teamID = t.teamID');  //potentially wrong, if so, fix later. EDIT(UPDATE): it worked, 
-        res.render('matchTeams', { title: 'matchTeams Page', matchTeams: rows});
+        const [matchTeams] = await db.query(`
+            SELECT mt.matchTeamsID, mt.matchID, mt.teamID, t.teamName
+            FROM matchTeams mt
+            JOIN Teams t ON mt.teamID = t.teamID
+            ORDER BY mt.matchID ASC
+        `);
+
+        const [teams] = await db.query(`SELECT teamID, teamName FROM Teams`);
+        const [matches] = await db.query(`SELECT matchID FROM Matches`);
+
+        res.render('matchTeams', {
+            title: 'matchTeams Page',
+            matchTeams,
+            teams,
+            matches
+        });
+
     } catch (err){
         console.error(err);
         res.status(500).send('Database error');
     }
-    
 });
 
 // matchTeams add route
