@@ -33,17 +33,9 @@
     <div class="form-row">
         <select name="tournamentID" required>
             <option value="" disabled selected>Select tournament</option>
-            {{#if tournaments}}
-                {{#if tournaments.length}}
-                    {{#each tournaments}}
-                        <option value="{{tournamentID}}">{{tournamentName}} (ID: {{tournamentID}})</option>
-                    {{/each}}
-                {{else}}
-                    <option value="" disabled>No tournaments available</option>
-                {{/if}}
-            {{else}}
-                <option value="" disabled>No tournaments available</option>
-            {{/if}}
+            {{#each tournaments}}
+                <option value="{{tournamentID}}">{{tournamentName}} (ID: {{tournamentID}})</option>
+            {{/each}}
         </select>
         <input type="datetime-local" name="scheduledTime" required>
         <input type="text" name="winner" placeholder="Winner">
@@ -51,19 +43,9 @@
     </div>
 </form>
 
-<!-- options template used by the client-side edit form -->
-<script id="tournament-options" type="text/template">
-    {{#if tournaments}}
-        {{#if tournaments.length}}
-            {{#each tournaments}}
-                <option value="{{tournamentID}}">{{tournamentName}} (ID: {{tournamentID}})</option>
-            {{/each}}
-        {{else}}
-            <option value="" disabled>No tournaments available</option>
-        {{/if}}
-    {{else}}
-        <option value="" disabled>No tournaments available</option>
-    {{/if}}
+<!-- hidden data used by the client-side edit form -->
+<script id="tournament-data" type="application/json">
+{{json tournaments}}
 </script>
 
 <script>
@@ -72,6 +54,14 @@ function confirmDelete(name) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Parse tournaments data from the hidden script tag
+    let tournaments = [];
+    try {
+        tournaments = JSON.parse(document.getElementById('tournament-data').textContent);
+    } catch (e) {
+        console.error('Error parsing tournaments:', e);
+    }
+
     document.querySelectorAll('.edit-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const row = btn.closest('tr');
@@ -79,16 +69,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (row.querySelector('input')) return;
 
-            const tournamentID = row.querySelector('.tournamentID').textContent;
+            const tournamentID = row.querySelector('.tournamentID').textContent.trim();
             const scheduledTime = row.querySelector('.scheduledTime').textContent;
             const winner = row.querySelector('.winner').textContent;
 
-            // Replace tournamentID cell with a select populated from the server-rendered options
-            const optionsHtml = document.getElementById('tournament-options').innerHTML;
+            // Build options from tournaments array
+            let optionsHtml = '';
+            tournaments.forEach(t => {
+                const selected = t.tournamentID == tournamentID ? 'selected' : '';
+                optionsHtml += `<option value="${t.tournamentID}" ${selected}>${t.tournamentName} (ID: ${t.tournamentID})</option>`;
+            });
+
+            // Replace tournamentID cell with a select
             row.querySelector('.tournamentID').innerHTML = `<select name="tournamentID">${optionsHtml}</select>`;
-            // set currently-selected value
-            const select = row.querySelector('select[name="tournamentID"]');
-            if (select) select.value = tournamentID.trim();
 
             row.querySelector('.scheduledTime').innerHTML = `<input type="datetime-local" name="scheduledTime" value="${scheduledTime}">`;
             row.querySelector('.winner').innerHTML = `<input type="text" name="winner" value="${winner}">`;
