@@ -1,3 +1,8 @@
+Tourna: A tournament helper utility
+
+Created by:
+    Crystal Wolf and Sophie Peroutka
+
 Overview:
 Esports has gained popularity over the years, and with that comes a need for a competitive space.
 That’s where tournaments come in. Events like the Esports World Cup, which saw over 2,500
