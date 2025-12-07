@@ -21,3 +21,6 @@ errors, simplify the scheduling for organizers and viewers, and make overall vie
 will be saved year to year for tournament administrator records to see the growth of the
 tournaments each year.
 
+Citations:
+    AI was used for debugging
+
